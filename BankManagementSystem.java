@@ -1,4 +1,3 @@
-
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -11,7 +10,8 @@ class Account{
     Account(int accountNumber, String accountHolder, double deposit, double balance){
         this.accountHolder = accountHolder;
         this.accountNumber = accountNumber; 
-        this.balance = deposit;
+        this.balance = balance;
+        this.deposit = deposit;
     }
     public int getNumber(){
         return accountNumber;
@@ -74,28 +74,28 @@ public class BankManagementSystem {
 
             switch(choice){
                 case "1":
-
+                    createAccount(Database, input);
                 break;
                 case "2":
-
+                    Deposit(Database, input);
                 break;
                 case "3":
-
+                    withdraw(Database, input);
                 break;
                 case "4":
-
+                    checkBalance(Database, input);
                 break;
                 case "5":
-
+                    displayAccount(Database, input);
                 break;
                 case "6":
-
+                    search(Database, input);
                 break;
                 case "7":
-
+                    displayAccounts(Database);
                 break;
                 case "8":
-
+                    delete(Database, input);
                 break;
                 case "9":
 
@@ -113,4 +113,175 @@ public class BankManagementSystem {
             }
         }    
     }
-}
+    public static void checkDataBase(ArrayList<Account> Database){
+        if(Database.isEmpty()){
+            System.out.println("Database is Empty...");
+            return;
+        }
+    }
+
+    public static void createAccount(ArrayList<Account> Database, Scanner input){
+        System.out.println("\n\tCreate Bank Account");
+        System.out.print("Enter name: ");
+        String name = input.nextLine();
+        System.out.print("Enter Account number(8-digits): ");
+        int accountNumber1 = input.nextInt();
+        input.nextLine();
+        String accStr = String.valueOf(accountNumber1);
+        if(!accStr.matches("\\d{8}")){
+            System.out.print("Account Number must be 8 digits...");
+            return;
+        }
+        int accountNumber = Integer.parseInt(accStr);
+
+        System.out.print("Enter First Deposit: ");
+        double deposit = input.nextDouble();
+
+        Account account = new Account(accountNumber, name, deposit, deposit);
+        Database.add(account);
+        System.out.println("Account Created...");
+        input.nextLine();
+
+    }
+    public static void Deposit(ArrayList<Account> Database, Scanner input){
+        checkDataBase(Database);
+        System.out.print("Enter Account Number to Deposit Into: ");
+        int accountNumber = input.nextInt();
+        boolean found = false;
+        for(Account s: Database){
+            if(accountNumber == s.getNumber()){
+                System.out.print("Enter amount to Deposit: ");
+                double deposit = input.nextDouble();
+                s.Deposit(deposit);
+                found = true;
+
+            }
+            }
+            
+        if(!found){
+            System.out.println("Account not Found...");
+           
+            return;
+        }
+        input.nextLine();
+    }
+    public static void withdraw(ArrayList<Account> Database, Scanner input){
+        checkDataBase(Database);
+        System.out.print("Enter Account Number to Withdraw from: ");
+        int accountNumber = input.nextInt();
+        boolean found = false;
+        for(Account s: Database){
+            if(accountNumber == s.getNumber()){
+                System.out.print("Enter amount to Withdraw: ");
+                double withdraw = input.nextDouble();
+                s.Withdraw(withdraw);
+                found = true;
+
+            }
+            }
+            
+        if(!found){
+            System.out.println("Account not Found...");
+           
+            return;
+        }
+        input.nextLine();
+    }
+
+    public static void checkBalance(ArrayList<Account> Database, Scanner input){
+        checkDataBase(Database);
+        System.out.print("Enter Account Number to Check Balance: ");
+        int accountNumber = input.nextInt();
+        input.nextLine();
+        boolean found = false;
+        for(Account s:Database){
+            if(accountNumber == s.getNumber()){
+                System.out.println("Name: " + s.getHolder());
+                System.out.println("Account Number: " + s.getNumber());
+                System.out.println("Balance: " + s.getBalance());
+                found = true;
+            }
+        }
+
+        if(!found){
+            System.out.println("Account not Found...");
+            return;
+        }
+    }
+
+    public static void displayAccount(ArrayList<Account> Database, Scanner input){
+        checkDataBase(Database);
+        System.out.print("Enter Account Number to View Account: ");
+        int accountNumber = input.nextInt();
+        input.nextLine();
+        boolean found = false;
+        for(Account s:Database){
+            if(accountNumber == s.getNumber()){
+                System.out.println("Name: " + s.getHolder());
+                System.out.println("Account Number: " + s.getNumber());
+                System.out.println("Balance: " + s.getBalance());
+                found = true;
+            }
+        }
+
+        if(!found){
+            System.out.println("Account not Found...");
+            return;
+        }
+    }
+    
+    public static void search(ArrayList<Account> Database, Scanner input){
+        checkDataBase(Database);
+        System.out.print("Enter Account Number to Search Account: ");
+        int accountNumber = input.nextInt();
+        input.nextLine();
+        boolean found = false;
+        for(Account s:Database){
+            if(accountNumber == s.getNumber()){
+                System.out.println("Name: " + s.getHolder());
+                System.out.println("Account Number: " + s.getNumber());
+                System.out.println("Balance: " + s.getBalance());
+                found = true;
+            }
+        }
+
+        if(!found){
+            System.out.println("Account not Found...");
+            return;
+        }
+    }
+    public static void displayAccounts(ArrayList<Account> Database){
+        checkDataBase(Database);
+        int num = 1;
+        for(Account s: Database){
+            System.out.println("Student- " + num);
+            System.out.println("Name: " + s.getHolder());
+            System.out.println("Account Number: " + s.getNumber());
+            System.out.println("Balance: " + s.getBalance());
+            num++;
+        }
+    } 
+
+    public static void delete(ArrayList<Account> Database, Scanner input){
+        checkDataBase(Database);
+        System.out.print("Enter Account Number to Search Account: ");
+        int accountNumber = input.nextInt();
+        input.nextLine();
+        boolean found = false;
+        for(Account s:Database){
+            if(accountNumber == s.getNumber()){
+                Database.remove(accountNumber);
+                System.out.print("Account Deleted...");
+                found = true;
+            }
+        }
+
+        if(!found){
+            System.out.println("Account not Found...");
+            return;
+        }
+    }
+
+    }
+
+    
