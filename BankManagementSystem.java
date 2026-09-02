@@ -7,11 +7,10 @@ class Account{
     private double deposit;
     private double balance;
 
-    Account(int accountNumber, String accountHolder, double deposit, double balance){
+    Account(int accountNumber, String accountHolder, double balance){
         this.accountHolder = accountHolder;
         this.accountNumber = accountNumber; 
         this.balance = balance;
-        this.deposit = deposit;
     }
     public int getNumber(){
         return accountNumber;
@@ -29,7 +28,7 @@ class Account{
     }
 
     public void Deposit(double amount){
-        if(amount < 0){
+        if(amount <= 0){
             System.out.println("Invalid Amount to Deposit...");
             return;
         }
@@ -39,6 +38,10 @@ class Account{
     }
 
     public void Withdraw(double amount){
+        if(amount <= 0){
+            System.out.println("Invalid Amount to Withdraw...");
+            return;
+        }
         if(amount > balance){
             System.out.println("Insufficient Funds to make Withdraw...");
             return;
@@ -113,12 +116,6 @@ public class BankManagementSystem {
             }
         }    
     }
-    public static void checkDataBase(ArrayList<Account> Database){
-        if(Database.isEmpty()){
-            System.out.println("Database is Empty...");
-            return;
-        }
-    }
 
     public static void createAccount(ArrayList<Account> Database, Scanner input){
         System.out.println("\n\tCreate Bank Account");
@@ -133,18 +130,33 @@ public class BankManagementSystem {
             return;
         }
         int accountNumber = Integer.parseInt(accStr);
+        for(Account s: Database){
+            if(s.getNumber() == accountNumber){
+                System.out.println("Account number Already exists...");
+                return;
+            }
+        }
+        
 
         System.out.print("Enter First Deposit: ");
         double deposit = input.nextDouble();
+        //input.nextLine();
+        if(deposit <= 0){
+            System.out.println("Initial deposit must be greater than 0...");
+            return;
+        }
 
-        Account account = new Account(accountNumber, name, deposit, deposit);
+        Account account = new Account(accountNumber, name, deposit);
         Database.add(account);
         System.out.println("Account Created...");
         input.nextLine();
 
     }
     public static void Deposit(ArrayList<Account> Database, Scanner input){
-        checkDataBase(Database);
+        if( Database.isEmpty()){
+            System.out.println("Database is empty...");
+            return;
+        }
         System.out.print("Enter Account Number to Deposit Into: ");
         int accountNumber = input.nextInt();
         boolean found = false;
@@ -154,7 +166,7 @@ public class BankManagementSystem {
                 double deposit = input.nextDouble();
                 s.Deposit(deposit);
                 found = true;
-
+                break;
             }
             }
             
@@ -166,7 +178,10 @@ public class BankManagementSystem {
         input.nextLine();
     }
     public static void withdraw(ArrayList<Account> Database, Scanner input){
-        checkDataBase(Database);
+        if( Database.isEmpty()){
+            System.out.println("Database is empty...");
+            return;
+        }
         System.out.print("Enter Account Number to Withdraw from: ");
         int accountNumber = input.nextInt();
         boolean found = false;
@@ -176,6 +191,7 @@ public class BankManagementSystem {
                 double withdraw = input.nextDouble();
                 s.Withdraw(withdraw);
                 found = true;
+                break;
 
             }
             }
@@ -189,7 +205,10 @@ public class BankManagementSystem {
     }
 
     public static void checkBalance(ArrayList<Account> Database, Scanner input){
-        checkDataBase(Database);
+        if( Database.isEmpty()){
+            System.out.println("Database is empty...");
+            return;
+        }
         System.out.print("Enter Account Number to Check Balance: ");
         int accountNumber = input.nextInt();
         input.nextLine();
@@ -200,6 +219,7 @@ public class BankManagementSystem {
                 System.out.println("Account Number: " + s.getNumber());
                 System.out.println("Balance: " + s.getBalance());
                 found = true;
+                break;
             }
         }
 
@@ -210,7 +230,10 @@ public class BankManagementSystem {
     }
 
     public static void displayAccount(ArrayList<Account> Database, Scanner input){
-        checkDataBase(Database);
+        if( Database.isEmpty()){
+            System.out.println("Database is empty...");
+            return;
+        }
         System.out.print("Enter Account Number to View Account: ");
         int accountNumber = input.nextInt();
         input.nextLine();
@@ -221,6 +244,7 @@ public class BankManagementSystem {
                 System.out.println("Account Number: " + s.getNumber());
                 System.out.println("Balance: " + s.getBalance());
                 found = true;
+                break;
             }
         }
 
@@ -231,7 +255,10 @@ public class BankManagementSystem {
     }
     
     public static void search(ArrayList<Account> Database, Scanner input){
-        checkDataBase(Database);
+        if( Database.isEmpty()){
+            System.out.println("Database is empty...");
+            return;
+        }
         System.out.print("Enter Account Number to Search Account: ");
         int accountNumber = input.nextInt();
         input.nextLine();
@@ -242,6 +269,7 @@ public class BankManagementSystem {
                 System.out.println("Account Number: " + s.getNumber());
                 System.out.println("Balance: " + s.getBalance());
                 found = true;
+                break;
             }
         }
 
@@ -251,7 +279,10 @@ public class BankManagementSystem {
         }
     }
     public static void displayAccounts(ArrayList<Account> Database){
-        checkDataBase(Database);
+        if( Database.isEmpty()){
+            System.out.println("Database is empty...");
+            return;
+        }
         int num = 1;
         for(Account s: Database){
             System.out.println("Student- " + num);
@@ -263,20 +294,26 @@ public class BankManagementSystem {
     } 
 
     public static void delete(ArrayList<Account> Database, Scanner input){
-        checkDataBase(Database);
-        System.out.print("Enter Account Number to Search Account: ");
+        if( Database.isEmpty()){
+            System.out.println("Database is empty...");
+            return;
+        }
+        System.out.print("Enter Account Number to delete Account: ");
         int accountNumber = input.nextInt();
         input.nextLine();
-        boolean found = false;
+
+        Account accountToDelete = null;
+        
         for(Account s:Database){
             if(accountNumber == s.getNumber()){
-                Database.remove(accountNumber);
-                System.out.print("Account Deleted...");
-                found = true;
+                accountToDelete = s;
+                break;
             }
         }
-
-        if(!found){
+        if(accountToDelete != null){
+            Database.remove(accountToDelete);
+            System.out.println("Account Deleted successfully");
+        }else{
             System.out.println("Account not Found...");
             return;
         }
