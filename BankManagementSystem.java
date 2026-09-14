@@ -1,56 +1,6 @@
 import java.util.Scanner;
 import java.util.ArrayList;
 
-class Account{
-    private int accountNumber;
-    private String accountHolder;
-    private double deposit;
-    private double balance;
-
-    Account(int accountNumber, String accountHolder, double balance){
-        this.accountHolder = accountHolder;
-        this.accountNumber = accountNumber; 
-        this.balance = balance;
-    }
-    public int getNumber(){
-        return accountNumber;
-    }
-
-    public String getHolder(){
-        return accountHolder;
-    }
-
-    public double getDeposit(){
-        return deposit;
-    }
-    public double getBalance(){
-        return balance;
-    }
-
-    public void Deposit(double amount){
-        if(amount <= 0){
-            System.out.println("Invalid Amount to Deposit...");
-            return;
-        }
-        balance += amount;
-        System.out.println("Money Deposited Successfully...");
-        System.out.println("New Balance: " + balance);
-    }
-
-    public void Withdraw(double amount){
-        if(amount <= 0){
-            System.out.println("Invalid Amount to Withdraw...");
-            return;
-        }
-        if(amount > balance){
-            System.out.println("Insufficient Funds to make Withdraw...");
-            return;
-        }
-        balance -= amount;
-        System.out.println("Money Withdrawn Successfully...");
-        System.out.println("New Balance: " + balance);
-    }
-}
 
 public class BankManagementSystem {
     public static void main(String [] args){
@@ -101,10 +51,10 @@ public class BankManagementSystem {
                     delete(Database, input);
                 break;
                 case "9":
-
+                    transactionHistory(Database, input);
                 break;
                 case "10":
-
+                    transfer(Database, input);
                 break;
                 case "11":
                     running = false;
@@ -148,6 +98,7 @@ public class BankManagementSystem {
 
         Account account = new Account(accountNumber, name, deposit);
         Database.add(account);
+        
         System.out.println("Account Created...");
         input.nextLine();
 
@@ -285,7 +236,7 @@ public class BankManagementSystem {
         }
         int num = 1;
         for(Account s: Database){
-            System.out.println("Student- " + num);
+            System.out.println("\tAccount-" + num);
             System.out.println("Name: " + s.getHolder());
             System.out.println("Account Number: " + s.getNumber());
             System.out.println("Balance: " + s.getBalance());
@@ -317,6 +268,83 @@ public class BankManagementSystem {
             System.out.println("Account not Found...");
             return;
         }
+    }
+    public static void transactionHistory(ArrayList<Account> Database, Scanner input){
+        if( Database.isEmpty()){
+            System.out.println("Database is empty...");
+            return;
+        }
+        System.out.print("Enter Account Number to Check History");
+        int accountNumber = input.nextInt();
+        input.nextLine();
+        boolean found = false;
+        for(Account s:Database){
+            if(accountNumber == s.getNumber()){
+                s.History();
+                found = true;
+                break;
+            }
+        }
+
+        if(!found){
+            System.out.print("Account not found...");
+            return;
+        }
+    }
+    public static void transfer(ArrayList<Account> Database, Scanner input){
+        if(Database.isEmpty()){
+            System.out.println("Database is Empty...");
+            return;
+        }
+
+        System.out.print("Enter Sender Account Number: ");
+        int senderAccount = input.nextInt();
+        input.nextLine();
+
+        System.out.print("Enter Receiver Account Number: ");
+        int receiverAccount = input.nextInt();
+        input.nextLine();
+
+        Account sender = null;
+        Account receiver = null;
+        for(Account s:Database){
+            if(senderAccount == s.getNumber()){
+                sender = s;
+            }
+            if(receiverAccount == s.getNumber()){
+                receiver = s;
+            }
+        }
+
+        if(sender == null){
+            System.out.println("Sender Account not Found....");
+            return;
+        }
+        if(receiver == null){
+            System.out.println("Receiver Account not Found....");
+            return;
+        }
+        if(sender == receiver){
+            System.out.println("Same Account, Invalid Transaction...");
+            return;
+        }
+
+        System.out.print("Enter Amount to Transfer: ");
+        double amount = input.nextDouble();
+        //input.close();
+        if(amount <= 0){
+            System.out.println("Invalid Amount....");
+            return;
+        }
+        if(amount > sender.getBalance()){
+            System.out.println("Insufficient Amount...");
+            return;
+        }
+        sender.Withdraw(amount);
+        receiver.Deposit(amount);
+        System.out.println("Transaction Complete...");
+
+        input.nextLine();
     }
 
     }
