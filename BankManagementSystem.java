@@ -1,6 +1,6 @@
 import java.util.Scanner;
 import java.util.ArrayList;
-
+import java.util.InputMismatchException;
 
 public class BankManagementSystem {
     public static void main(String [] args){
@@ -71,6 +71,11 @@ public class BankManagementSystem {
         System.out.println("\n\tCreate Bank Account");
         System.out.print("Enter name: ");
         String name = input.nextLine();
+
+        if(!name.matches("[a-zA-Z]+")){
+            System.out.println("Name must contain letters Only..");
+            return;
+        }
         System.out.print("Enter Account number(8-digits): ");
         int accountNumber1 = input.nextInt();
         input.nextLine();
@@ -296,15 +301,16 @@ public class BankManagementSystem {
             System.out.println("Database is Empty...");
             return;
         }
+        try{
+            System.out.print("Enter Sender Account Number: ");
+            int senderAccount = input.nextInt();
+            input.nextLine();
 
-        System.out.print("Enter Sender Account Number: ");
-        int senderAccount = input.nextInt();
-        input.nextLine();
+            System.out.print("Enter Receiver Account Number: ");
+            int receiverAccount = input.nextInt();
+            input.nextLine();
 
-        System.out.print("Enter Receiver Account Number: ");
-        int receiverAccount = input.nextInt();
-        input.nextLine();
-
+            
         Account sender = null;
         Account receiver = null;
         for(Account s:Database){
@@ -329,6 +335,8 @@ public class BankManagementSystem {
             return;
         }
 
+            try{
+                
         System.out.print("Enter Amount to Transfer: ");
         double amount = input.nextDouble();
         //input.close();
@@ -345,6 +353,18 @@ public class BankManagementSystem {
         System.out.println("Transaction Complete...");
 
         input.nextLine();
+            }catch(InputMismatchException e){
+                System.out.println("Invalid Input. Please enter a Valid amount");
+                input.nextLine();
+            }
+
+        }catch(InputMismatchException e){
+            System.out.println("Invalid Input. Please enter a Valid account number");
+            input.nextLine();
+        }
+
+        
+
     }
 
     }
